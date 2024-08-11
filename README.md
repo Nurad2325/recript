@@ -13,5 +13,8 @@ FLASK_APP=flaskr:create_app
 FLASK_ENV=development
 SECRET_KEY=your-secret-key
 ```
-Run server  
-```flask run```
+Run server locally for development  
+```flask run```  
+  
+## Development  
+Project is setup to use routes for API routes, and services for business logic. To add a new base route register the route in flaskr/__init__.py like how the health endpoint is registered
