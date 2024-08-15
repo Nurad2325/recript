@@ -3,16 +3,13 @@ import requests
 from flask import current_app as app
 from flask import Blueprint, request, jsonify
 
-# Define a blueprint for the GitHub connector
 bp = Blueprint('github', __name__)
 
-# Use environment variable for GitHub token (better practice)
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN', 'your-default-token-here')
 
 @bp.route('/slack/repo-info', methods=['POST'])
 def repo_info():
     app.logger.info("/slack/repo-info called")
-    slack_token = request.form.get('token')
     text = request.form.get('text')  # Text after /repo-info command
 
     if not text:

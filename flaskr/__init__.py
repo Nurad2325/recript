@@ -32,8 +32,10 @@ def create_app(test_config=None):
 
     from .routes import health
     from .routes.connectors import github
+    from .routes.connectors import confluence
 
     app.register_blueprint(health.bp)
     app.register_blueprint(github.bp)
+    app.register_blueprint(confluence.bp)
     app.logger.info('App started...')
     return app

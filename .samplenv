@@ -2,3 +2,7 @@ FLASK_APP=flaskr:create_app
 FLASK_ENV=development
 SECRET_KEY=your-secret-key
 GITHUB_TOKEN=TOKEN_HERE
+CONFLUENCE_BASE_URL='https://engineeringonboarding.atlassian.net/wiki'
+CONFLUENCE_USERNAME = 'emailidhere'
+CONFLUENCE_API_TOKEN='CONFLUENCE_API_TOKEN_HERE'
+SLACK_BOT_TOKEN='SLACK_BOT_TOKEN_HERE'
