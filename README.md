@@ -16,5 +16,8 @@ SECRET_KEY=your-secret-key
 Run server locally for development  
 ```flask run```  
   
+## Prod settings  
+On the server the application uses nginx, and docker. Certificate should be setup.
+  
 ## Development  
 Project is setup to use routes for API routes, and services for business logic. To add a new base route register the route in flaskr/__init__.py like how the health endpoint is registered
