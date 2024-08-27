@@ -1,0 +1,6 @@
+services:
+  server:
+    container_name: flaskr
+    image: flaskr
+    ports:
+      - '5000:5000'
