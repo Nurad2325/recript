@@ -2,6 +2,7 @@ from flask import current_app as app
 from flask import Blueprint, request, jsonify
 from flaskr.services.confluence import fetch_confluence_page_content
 from flaskr.services.slack import send_slack_message
+from flaskr.services.llm_agent import enhance_with_llm
 
 bp = Blueprint('confluence', __name__)
 
@@ -22,7 +23,8 @@ def slack_events():
         if command == '/read-wiki':
             page_id = data.get('text', '98307')  # Default page ID or extract from command text
             page_content = fetch_confluence_page_content(page_id)
-            send_slack_message(data['response_url'], page_content)
+            enhanced_content = enhance_with_llm(page_content)
+            send_slack_message(data['response_url'], enhanced_content)
     
     # Handle message events
     if 'event' in data:
@@ -32,6 +34,7 @@ def slack_events():
             # Extract page ID from message or hardcode for demo
             page_id = '98307'  # Replace with your actual page ID
             page_content = fetch_confluence_page_content(page_id)
-            send_slack_message(channel, page_content)
+            enhanced_content = enhance_with_llm(page_content)
+            send_slack_message(channel, enhanced_content)
 
     return jsonify({'status': 'ok'})
