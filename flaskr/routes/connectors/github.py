@@ -2,6 +2,7 @@ import os
 import requests
 from flask import current_app as app
 from flask import Blueprint, request, jsonify
+from flaskr.services.llm_agent import enhance_with_llm
 
 bp = Blueprint('github', __name__)
 
@@ -27,9 +28,16 @@ def repo_info():
         repo_name = repo_data.get('name')
         repo_description = repo_data.get('description')
         repo_url = repo_data.get('html_url')
+
+        # Combine repository information into a single text block
+        repo_info_text = f'*Repository:* {repo_name}\n*Description:* {repo_description}\n*URL:* {repo_url}'
+
+        # Enhance the repository information with LLM
+        enhanced_content = enhance_with_llm(repo_info_text)
+
         return jsonify({
             'response_type': 'in_channel',  # Make response visible to all in the channel
-            'text': f'*Repository:* {repo_name}\n*Description:* {repo_description}\n*URL:* {repo_url}'
+            'text': enhanced_content
         })
     else:
         return jsonify({'text': 'Repository not found. Please check the owner/repo format.'})
