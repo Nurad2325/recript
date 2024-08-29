@@ -1,5 +1,7 @@
 # Project Information  
-## Setup instructions  
+## Development  
+Project is setup to use routes for API routes, and services for business logic. To add a new base route register the route in flaskr/__init__.py like how the health endpoint is registered
+### Setup instructions  
   
 Start by creating a virtual environment.  
 ```python3 -m venv .venv```  
@@ -17,7 +19,7 @@ Run server locally for development
 ```flask run```  
   
 ## Prod settings  
-On the server the application uses nginx, and docker. Certificate should be setup.
+On the server the application uses nginx, and gunicorn. Certificate should already be setup.
+The following deployment guide was followed: https://github.com/yeshwanthlm/YouTube/blob/main/flask-on-aws-ec2.md  
   
-## Development  
-Project is setup to use routes for API routes, and services for business logic. To add a new base route register the route in flaskr/__init__.py like how the health endpoint is registered
+How to update server with latest main:
