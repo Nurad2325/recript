@@ -22,4 +22,4 @@ Run server locally for development
 On the server the application uses nginx, and gunicorn. Certificate should already be setup.
 The following deployment guide was followed: https://github.com/yeshwanthlm/YouTube/blob/main/flask-on-aws-ec2.md  
   
-How to update server with latest main:
+How to update server with latest main: run ./deploy.sh
