@@ -3,3 +3,13 @@ bs4
 gunicorn
 requests
 python-dotenv
+llama-index
+openai
+pinecone[grpc]
+pinecone-client
+langchain-pinecone
+langchain-openai
+langchain-text-splitters
+langchain
+langchain-communitys
+tiktoken

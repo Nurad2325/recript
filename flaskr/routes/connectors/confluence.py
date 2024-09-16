@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from flaskr.services.confluence import fetch_confluence_page_content
 from flaskr.services.slack import send_slack_message
 from flaskr.services.llm_agent import enhance_with_llm
+from flaskr.services.pinecone import query_pinecone_index  # Import Pinecone query function
 
 bp = Blueprint('confluence', __name__)
 
@@ -20,11 +21,21 @@ def slack_events():
     # Handle slash commands
     if 'command' in data:
         command = data['command']
-        if command == '/read-wiki':
-            page_id = data.get('text', '98307')  # Default page ID or extract from command text
-            page_content = fetch_confluence_page_content(page_id)
-            enhanced_content = enhance_with_llm(page_content)
+        if '/read-wiki' in command:
+            # Extract the user's query (instead of using a specific page ID)
+            query = data.get('text', 'what app are we using here?')  # Default query or user query from Slack command
+            pinecone_response = query_pinecone_index(query)  # Query Pinecone for relevant content
+            
+            # Enhance the response using the LLM
+            enhanced_content = enhance_with_llm(pinecone_response)
+            
+            # Send the enhanced content back to Slack
             send_slack_message(data['response_url'], enhanced_content)
+
+            # page_id = data.get('text', '98307')  # Default page ID or extract from command text
+            # page_content = fetch_confluence_page_content(page_id)
+            # enhanced_content = enhance_with_llm(page_content)
+            # send_slack_message(data['response_url'], enhanced_content)
     
     # Handle message events
     if 'event' in data:

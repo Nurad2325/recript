@@ -5,6 +5,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 from config import DevelopmentConfig, ProductionConfig
+from flaskr.services.pinecone import main as pinecone_main  # Import the main function
 
 load_dotenv()
 
@@ -39,5 +40,9 @@ def create_app(test_config=None):
     app.register_blueprint(github.bp)
     app.register_blueprint(confluence.bp)
     app.register_blueprint(notion.bp)
+
+    # Call the Pinecone main function during startup
+    pinecone_main()  # This will run the Pinecone setup
+    
     app.logger.info('App started...')
     return app
