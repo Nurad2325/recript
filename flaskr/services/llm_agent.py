@@ -1,5 +1,12 @@
 import os
 import requests
+from llama_index.core.node_parser import (
+    SentenceSplitter,
+    SemanticSplitterNodeParser,
+)
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import Document
+from flask import current_app
 
 def enhance_with_llm(text):
     """
@@ -50,4 +57,24 @@ def test_openai_api():
     
     response = requests.post(url, headers=headers, json=data)
 
-    
+def embed_chunk(chunk):
+    try: 
+        OPENAI_EMBEDDING_MODEL = os.getenv('OPENAI_EMBEDDING_MODEL', '<ERROR>')
+        embed_model = OpenAIEmbedding(model=OPENAI_EMBEDDING_MODEL)
+        embedding = embed_model.get_text_embedding(chunk)
+        return embedding
+    except Exception as error:
+        current_app.logger.error(f"Error embedding doc: {error}")
+
+def chunk_text(text):
+    try:
+        OPENAI_EMBEDDING_MODEL = os.getenv('OPENAI_EMBEDDING_MODEL', '<ERROR>')
+        embed_model = OpenAIEmbedding(model=OPENAI_EMBEDDING_MODEL)
+        splitter = SemanticSplitterNodeParser(
+            buffer_size=1, breakpoint_percentile_threshold=95, embed_model=embed_model
+        )
+        nodes = splitter.get_nodes_from_documents([Document(text=text)])
+        chunks = [node.get_content() for node in nodes]
+        return chunks
+    except Exception as error:
+        current_app.logger.error(f"Error chunking text: {error}")

@@ -2,4 +2,6 @@ Flask
 bs4
 gunicorn
 requests
+llama-index
 python-dotenv
+pinecone
