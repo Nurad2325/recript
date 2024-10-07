@@ -1,5 +1,5 @@
 from flaskr.services.confluence import get_all_confluence_pages
-from flaskr.services.llm_agent import chunk_text, embed_chunk
+from flaskr.services.llm_agent import chunk_text, embed_text
 from flaskr.db import get_db
 from flask import current_app
 import uuid
@@ -15,7 +15,7 @@ def load_database():
             chunks = chunk_text(page)
             upserts = []
             for j, chunk in enumerate(chunks):
-                embedded_chunk = embed_chunk(chunk)
+                embedded_chunk = embed_text(chunk)
                 source = "CONFLUENCE"
                 metadata = {
                     "doc": i,

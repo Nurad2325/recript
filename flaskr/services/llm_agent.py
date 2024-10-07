@@ -57,11 +57,11 @@ def test_openai_api():
     
     response = requests.post(url, headers=headers, json=data)
 
-def embed_chunk(chunk):
+def embed_text(text):
     try: 
         OPENAI_EMBEDDING_MODEL = os.getenv('OPENAI_EMBEDDING_MODEL', '<ERROR>')
         embed_model = OpenAIEmbedding(model=OPENAI_EMBEDDING_MODEL)
-        embedding = embed_model.get_text_embedding(chunk)
+        embedding = embed_model.get_text_embedding(text)
         return embedding
     except Exception as error:
         current_app.logger.error(f"Error embedding doc: {error}")
