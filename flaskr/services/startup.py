@@ -1,4 +1,5 @@
 from flaskr.services.confluence import get_all_confluence_pages
+from flaskr.services.github import get_all_github_repo_files
 from flaskr.services.llm_agent import chunk_text, embed_text
 from flaskr.db import get_db
 from flask import current_app
@@ -37,3 +38,32 @@ def load_database():
     except Exception as error:
         current_app.logger.error(f"Error uploading confluence docs: {error}")
     
+
+    # Fetch and process GitHub repository files
+    try:
+        repo_name = "sshHood/sshHood"  # Replace with actual GitHub repo name
+        files = get_all_github_repo_files(repo_name)
+        
+        if len(files) == 0:
+            current_app.logger.error("Error retrieving GitHub files")
+        
+        # Upload GitHub files to the database
+        for i, file_content in enumerate(files):
+            current_app.logger.info(f"Uploading {i+1}/{len(files)} GitHub files")
+            chunks = chunk_text(file_content)
+            upserts = []
+            for j, chunk in enumerate(chunks):
+                embedded_chunk = embed_text(chunk)
+                source = "GITHUB"
+                metadata = {
+                    "doc": i,
+                    "chunk": j,
+                    "source": source,
+                    "text": chunk
+                }
+                upserts.append({"id": str(uuid.uuid4()), "values": embedded_chunk, "metadata": metadata})
+            index.upsert(vectors=upserts)
+        current_app.logger.info(f"Completed uploading {len(files)} GitHub files")
+    
+    except Exception as error:
+        current_app.logger.error(f"Error uploading GitHub files: {error}")
