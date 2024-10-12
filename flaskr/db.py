@@ -32,4 +32,14 @@ def get_db():
     else:
         index = pc.Index(INDEX)
         return index
-    
+
+def query_db(query_vector):
+    pinecone_index = get_db()
+    results = pinecone_index.query(
+        vector=query_vector,
+        top_k=3,
+        include_values=True,
+        include_metadata=True,
+        timeout = 30
+    )
+    return results
