@@ -6,7 +6,10 @@ Project is setup to use routes for API routes, and services for business logic. 
 Start by creating a virtual environment.  
 ```python3 -m venv .venv```  
 Activate the virtual environment.  
+For mac:  
 ```source .venv/bin/activate```  
+For windows:  
+```.venv/Scripts/Activate```  
 Install dependencies.  
 ```pip install -r requirements.txt```  
 Create a local .env file with the following contents in the proj1 directory  
