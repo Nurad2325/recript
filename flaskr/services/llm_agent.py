@@ -1,12 +1,10 @@
 import os
 import requests
-from llama_index.core.node_parser import (
-    SentenceSplitter,
-    SemanticSplitterNodeParser,
-)
+from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import Document
 from flask import current_app
+from flaskr.db import query_db
 
 def enhance_with_llm(text):
     """
@@ -24,6 +22,34 @@ def enhance_with_llm(text):
         "model": "gpt-3.5-turbo",
         "messages": [
             {"role": "user", "content": f"Rephrase the following content into a brief answer of 5 lines: {text}"}
+        ],
+        "max_tokens": 150,
+    }
+
+    response = requests.post(llm_url, headers=headers, json=data)
+
+    if response.status_code == 200:
+        enhanced_text = response.json().get('choices', [{}])[0].get('message', {}).get('content', '').strip()
+        return enhanced_text
+    else:
+        return f"Error enhancing content: {response.status_code}"
+
+def enhance_with_llm_rag(query, content):
+    """
+    Enhances the provided text using the OpenAI GPT-3.5 API.
+    """
+    # Retrieve the OpenAI API key from environment variables
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '<ERROR>')
+
+    llm_url = "https://api.openai.com/v1/chat/completions"
+    headers = {
+        'Authorization': f'Bearer {OPENAI_API_KEY}',
+        'Content-Type': 'application/json',
+    }
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {"role": "user", "content": f"Answer the following query in a short brief: {query} using this content: {content}"}
         ],
         "max_tokens": 150,
     }
@@ -78,3 +104,24 @@ def chunk_text(text):
         return chunks
     except Exception as error:
         current_app.logger.error(f"Error chunking text: {error}")
+    
+def process_query(text):
+    # Generate the query embedding
+    query_vector = embed_text(text)
+    return query_vector
+
+def query_pinecone(text):
+    response = ""
+    query_vector = process_query(text)
+    results = query_db(query_vector)
+    
+    # Extract best match
+    if results.matches:
+        best_match = results.matches[0]  # Get the best match (most relevant)
+        if best_match.metadata and 'text' in best_match.metadata:
+            response = best_match.metadata['text']  # Get the relevant text from metadata
+        else:
+            response = "No relevant text found in metadata."
+    else:
+        response = "No matches found."
+    return response

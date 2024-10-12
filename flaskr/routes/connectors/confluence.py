@@ -2,7 +2,7 @@ from flask import current_app as app
 from flask import Blueprint, request, jsonify
 from flaskr.services.confluence import fetch_confluence_page_content
 from flaskr.services.slack import send_slack_message
-from flaskr.services.llm_agent import enhance_with_llm
+from flaskr.services.llm_agent import enhance_with_llm, enhance_with_llm_rag, query_pinecone
 
 bp = Blueprint('confluence', __name__)
 
@@ -20,10 +20,14 @@ def slack_events():
     # Handle slash commands
     if 'command' in data:
         command = data['command']
-        if command == '/read-wiki':
-            page_id = data.get('text', '98307')  # Default page ID or extract from command text
-            page_content = fetch_confluence_page_content(page_id)
-            enhanced_content = enhance_with_llm(page_content)
+        if '/read-wiki' in command:
+            query = data.get('text', 'what app are we using here?')  # Default query or user query from Slack command
+
+            pinecone_response = query_pinecone(query)
+            # page_id = data.get('text', '98307')  # Default page ID or extract from command text
+            # page_content = fetch_confluence_page_content(page_id)
+            
+            enhanced_content = enhance_with_llm_rag(query, pinecone_response)
             send_slack_message(data['response_url'], enhanced_content)
     
     # Handle message events
