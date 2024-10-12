@@ -34,7 +34,11 @@ def get_all_confluence_pages():
         for page in all_pages:
             page_id = page['id']
             page_content = fetch_confluence_page_content(page_id)
-            result.append(page_content)
+            result.append({
+                "id": page_id,
+                "content": page_content,
+                "title": page["title"]
+            })
         current_app.logger.info(f'Downloaded: {len(result)} pages from confluence')
     except Exception as error:
         current_app.logger.error(f'Error loading confluence data: {error}') 
