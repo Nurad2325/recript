@@ -1,4 +1,3 @@
-import asyncio
 from flask import current_app as app
 from flask_executor import Executor
 from flask import Blueprint, request, jsonify
@@ -11,7 +10,6 @@ bp = Blueprint('slack', __name__)
 def slack_events():
     data = request.form
     app.logger.info(f'Request payload {data}')
-    asyncio.create_task(receive_command(data)) 
     return jsonify({
             "response_type": "ephemeral",
             "text": "Processing your request..."

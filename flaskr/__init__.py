@@ -33,13 +33,9 @@ def create_app(test_config=None):
         perform_pre_boot_actions(app)
 
     from .routes import health
-    from .routes.connectors import github
-    from .routes.connectors import confluence
-    from .routes.connectors import notion
+    from .routes.connectors import slack
 
     app.register_blueprint(health.bp)
-    app.register_blueprint(github.bp)
-    app.register_blueprint(confluence.bp)
-    app.register_blueprint(notion.bp)
+    app.register_blueprint(slack.bp)
     app.logger.info('App started...')
     return app
