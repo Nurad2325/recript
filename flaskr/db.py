@@ -5,6 +5,10 @@ from pinecone import Pinecone, ServerlessSpec
 EMBEDDING_DIMENSION = 1536
 
 def init_db():
+    reload = os.getenv("RELOAD_INDEX")
+    if reload == "false":
+        current_app.logger.info(f"Reload set to {reload}. Skipping init pinecone...")
+        return
     DB_KEY = os.getenv('PINECONE_API_KEY', '<ERROR>')
     pc = Pinecone(api_key=DB_KEY)
     INDEX = os.getenv('INDEX_NAME', '<ERROR>')
@@ -33,11 +37,14 @@ def get_db():
         index = pc.Index(INDEX)
         return index
 
-def query_db(query_vector):
+def query_db(query_vector, source = "CONFLUENCE"):
     pinecone_index = get_db()
     results = pinecone_index.query(
         vector=query_vector,
         top_k=3,
+        filter={
+            "source":source
+        },
         include_values=True,
         include_metadata=True,
         timeout = 30
