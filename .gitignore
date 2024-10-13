@@ -9,7 +9,7 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
-
+.DS_store
 dist/
 build/
 *.egg-info/

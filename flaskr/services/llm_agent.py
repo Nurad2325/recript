@@ -9,8 +9,8 @@ from flask import current_app
 from flaskr.db import query_db
 
 def enhance_with_llm_rag(query, content):
-    OPENAI_EMBEDDING_MODEL = os.getenv('OPENAI_EMBEDDING_MODEL', '<ERROR>')
-    llm = OpenAI(model=OPENAI_EMBEDDING_MODEL)
+    OPENAI_CHAT_MODEL = os.getenv('OPENAI_CHAT_MODEL', '<ERROR>')
+    llm = OpenAI(model=OPENAI_CHAT_MODEL)
     messages = [
         ChatMessage(
             role="system", content=f"Given this content {content} answer this question, mention the source behind each part of the answer"
