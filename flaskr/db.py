@@ -7,7 +7,11 @@ EMBEDDING_DIMENSION = 1536
 def init_db():
     reload = os.getenv("RELOAD_INDEX")
     if reload == "false":
+<<<<<<< HEAD
         current_app.logger.info(f"Reload set to {reload}. Skipping init pinecone...")
+=======
+        current_app.logger.info(f"Reload set to {reload}. Skipping reload pinecone...")
+>>>>>>> main
         return
     DB_KEY = os.getenv('PINECONE_API_KEY', '<ERROR>')
     pc = Pinecone(api_key=DB_KEY)
