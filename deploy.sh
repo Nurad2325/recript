@@ -21,4 +21,5 @@ sudo systemctl restart app.service
 # Check the status
 sudo systemctl status app.service
 
+# Print status
 echo "Deployment completed."

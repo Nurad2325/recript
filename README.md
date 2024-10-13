@@ -10,7 +10,7 @@ For mac:
 ```source .venv/bin/activate```  
 For windows:  
 ```.venv/Scripts/Activate```  
-Install dependencies.  
+Install dependencies:  
 ```pip install -r requirements.txt```  
 Create a local .env file with the following contents in the proj1 directory  
 ```
