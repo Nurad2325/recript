@@ -18,8 +18,8 @@ def enhance_with_llm_rag(query, content):
         ChatMessage(
             role="system",
             content=f"""Given this content {content} answer this question, mention the source behind each part of the answer like 'Source: GitHub' or 'Source: Confluence'.  
-        If the content only contains 'No matches found', then mention that the current knowledge base does not explictly answer this question but you're giving this answer based on your best knowledge and
-        add this message at the end: "This query has been updated in the Knowledge Gap Tracker page in Confluence - https://engineeringonboarding.atlassian.net/wiki/spaces/SD/pages/9240675/Knowledge+Gap+Tracker" """
+         If the content only contains 'No matches found', mention that the current knowledge base does not explicitly answer this question, but providing the best possible answer. 
+        Add this message at the end: "This query has been updated in the Knowledge Gap Tracker page in Confluence - https://engineeringonboarding.atlassian.net/wiki/spaces/SD/pages/9240675/Knowledge+Gap+Tracker" """
         ),
         ChatMessage(role="user", content=query),
     ]
