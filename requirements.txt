@@ -5,4 +5,5 @@ requests
 llama-index
 python-dotenv
 pinecone
+PyGithub
 flask-executor==1.0.0
