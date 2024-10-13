@@ -8,6 +8,8 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.llms import ChatMessage
 from flask import current_app
 from flaskr.db import query_db
+from datetime import datetime
+import pytz
 
 def enhance_with_llm_rag(query, content):
     OPENAI_CHAT_MODEL = os.getenv('OPENAI_CHAT_MODEL', '<ERROR>')
@@ -17,7 +19,7 @@ def enhance_with_llm_rag(query, content):
             role="system",
             content=f"""Given this content {content} answer this question, mention the source behind each part of the answer like 'Source: GitHub' or 'Source: Confluence'.  
         If the content only contains 'No matches found', then include this message at the end:
-        "This query has been updated in the Unanswered FAQs page in Confluence - https://engineeringonboarding.atlassian.net/wiki/spaces/SD/pages/9240675/Unanswered+FAQs" """
+        "This query has been updated in the Knowledge Gap Tracker page in Confluence - https://engineeringonboarding.atlassian.net/wiki/spaces/SD/pages/9240675/Knowledge+Gap+Tracker" """
         ),
         ChatMessage(role="user", content=query),
     ]
@@ -139,9 +141,11 @@ def post_query_to_confluence(question):
         text = para.get_text(strip=True)
         if text.lower().startswith('question'):
             numbered_questions.append(f"<p>Question {idx}: {text.split(':', 1)[-1]}</p>")
-
-    # Add the new question at the end
-    new_question = f"<p>Question {len(numbered_questions) + 1}: {question}</p>"
+    
+    # Add the new question at the end with current PDT time
+    pdt_tz = pytz.timezone('America/Los_Angeles')
+    current_pdt_time = datetime.now(pdt_tz).strftime("%Y-%m-%d %I:%M:%S %p")
+    new_question = f"<p>Question {len(numbered_questions) + 1}: {question} (added on {current_pdt_time})</p>"
     numbered_questions.append(new_question)
 
     # Combine all questions back into the body
