@@ -1,8 +1,7 @@
 from flask import current_app as app
-from flask_executor import Executor
+from flaskr.executor import executor
 from flask import Blueprint, request, jsonify
-from flaskr.services.slack import receive_command, send_slack_message
-from flaskr.services.llm_agent import enhance_with_llm_rag, query_pinecone
+from flaskr.services.slack import receive_command
 
 bp = Blueprint('slack', __name__)
 
@@ -10,9 +9,10 @@ bp = Blueprint('slack', __name__)
 def slack_events():
     data = request.form
     app.logger.info(f'Request payload {data}')
+    executor.submit(receive_command, data)
     return jsonify({
             "response_type": "ephemeral",
-            "text": "Processing your request..."
+            "text": "Thinking..."
         }), 200 
     
     

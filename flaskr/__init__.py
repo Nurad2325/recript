@@ -1,7 +1,7 @@
 import os
-import sys
 import logging
 from flask import Flask
+from flaskr.executor import executor
 from dotenv import load_dotenv
 from config import DevelopmentConfig, ProductionConfig
 from flaskr.db import init_db
@@ -27,7 +27,7 @@ def create_app(test_config=None):
 
     app.logger.setLevel(logging.INFO if env == 'development' else logging.WARNING)
     app.logger.info('App starting...')
-
+    executor.init_app(app)
     with app.app_context():
         init_db()
         perform_pre_boot_actions(app)

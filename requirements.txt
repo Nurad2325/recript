@@ -5,3 +5,4 @@ requests
 llama-index
 python-dotenv
 pinecone
+flask-executor==1.0.0
