@@ -5,6 +5,10 @@ from pinecone import Pinecone, ServerlessSpec
 EMBEDDING_DIMENSION = 1536
 
 def init_db():
+    reload = os.getenv("RELOAD_INDEX")
+    if reload == "false":
+        current_app.logger.info(f"Reload set to {reload}. Skipping reload pinecone...")
+        return
     DB_KEY = os.getenv('PINECONE_API_KEY', '<ERROR>')
     pc = Pinecone(api_key=DB_KEY)
     INDEX = os.getenv('INDEX_NAME', '<ERROR>')

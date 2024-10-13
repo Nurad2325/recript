@@ -1,9 +1,11 @@
 import os
 
+
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
     LOG_TO_STDOUT = os.getenv('LOG_TO_STDOUT')
-
+    EXECUTOR_PROPAGATE_EXCEPTIONS = True
+    
 class DevelopmentConfig(Config):
     DEBUG = True
     LOG_LEVEL = 'DEBUG'
