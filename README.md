@@ -1,4 +1,10 @@
 # Project Information  
+
+# Overview
+The Onboarding Assistant agent tackles the challenges of inefficient onboarding by providing new hires with immediate access to critical information through Slack commands. By integrating knowledge sources like Confluence and GitHub, the assistant helps employees quickly locate answers from design documents or code snippets while also identifying gaps in documentation to facilitate a smoother onboarding experience for future hires.
+
+Developed as a Retrieval-Augmented Generation (RAG) agent using the Llama Index, it interfaces with Slack to efficiently address employee queries. Relevant documents and code are uploaded to Pinecone, which serves as a vector datastore. For each query, the agent retrieves results from Pinecone, filters them based on Confluence and GitHub metadata, and curates responses using a Language Model (LLM). The final answer is then sent to the user in Slack.
+
 ## Development  
 Project is setup to use routes for API routes, and services for business logic. To add a new base route register the route in flaskr/__init__.py like how the health endpoint is registered
 ### Setup instructions  
